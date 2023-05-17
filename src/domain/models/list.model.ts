@@ -1,7 +1,7 @@
 import { TaskModel } from './task.model';
 
 export class ListModel {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
   userId: string;

@@ -19,12 +19,17 @@ export class UpdateListService implements IUpdateList {
       tasks?: string | number | boolean;
     },
   ): Promise<void> {
-    await this.listRepository.findOneOrFail().catch(() => {
-      throw new ResourceNotFoundException(
-        'list',
-        `id: ${id} and user id: ${userId}`,
-      );
-    });
+    await this.listRepository
+      .findOneOrFail({
+        id,
+        userId,
+      })
+      .catch(() => {
+        throw new ResourceNotFoundException(
+          'list',
+          `id: ${id} and user id: ${userId}`,
+        );
+      });
 
     await this.listRepository.update({ id, userId }, data);
   }

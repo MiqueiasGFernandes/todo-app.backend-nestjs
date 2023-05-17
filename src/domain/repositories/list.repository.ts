@@ -10,7 +10,9 @@ export interface IListRepository {
       order: { [K in keyof ListModel]?: 'ASC' | 'DESC' };
     },
   ): Promise<ListModel[]>;
-  findOneOrFail(): Promise<ListModel>;
+  findOneOrFail(where: {
+    [K in keyof ListModel]?: boolean | number | string;
+  }): Promise<ListModel>;
   delete(where: {
     [K in keyof ListModel]?: boolean | number | string;
   }): Promise<void>;

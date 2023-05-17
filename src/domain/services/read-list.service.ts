@@ -10,12 +10,17 @@ export class ReadListService implements IReadListUseCase {
     @Inject(LIST_REPOSITORY) private readonly listRepository: IListRepository,
   ) {}
   async get(id: string, userId: string): Promise<ListModel> {
-    const list = await this.listRepository.findOneOrFail().catch(() => {
-      throw new ResourceNotFoundException(
-        'list',
-        `id: ${id} and user id: ${userId}`,
-      );
-    });
+    const list = await this.listRepository
+      .findOneOrFail({
+        id,
+        userId,
+      })
+      .catch(() => {
+        throw new ResourceNotFoundException(
+          'list',
+          `id: ${id} and user id: ${userId}`,
+        );
+      });
 
     return list;
   }

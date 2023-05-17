@@ -1,5 +1,3 @@
-import { ListModel } from '../models';
-
 export interface IRemoveListUseCase {
-  delete(id: string): Promise<ListModel>;
+  delete(id: string, userId: string): Promise<void>;
 }

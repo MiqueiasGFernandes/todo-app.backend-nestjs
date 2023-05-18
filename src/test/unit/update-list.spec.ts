@@ -3,8 +3,12 @@ import { UpdateListService } from '@domain/services/update-list.service';
 import { faker } from '@faker-js/faker';
 import { Test } from '@nestjs/testing';
 import { MockType } from '../fixtures';
+import {
+  ResourceNotFoundException,
+  UpdateNotAllowedException,
+} from '@domain/exceptions';
 
-describe('GIVEN finding list', () => {
+describe('GIVEN update List', () => {
   let updateListService: UpdateListService;
   let listRepositoryMock: MockType<IListRepository>;
 
@@ -28,33 +32,59 @@ describe('GIVEN finding list', () => {
   afterEach(() => {
     jest.clearAllMocks();
   });
-  describe('WHEN update List', () => {
-    describe('WHEN success', () => {
-      test('SHOULD not thrown any error', async () => {
-        listRepositoryMock.update.mockResolvedValue({});
-        listRepositoryMock.findOneOrFail.mockResolvedValue({});
+  describe('WHEN success', () => {
+    test('SHOULD not thrown any error', async () => {
+      listRepositoryMock.update.mockResolvedValue({});
+      listRepositoryMock.findOneOrFail.mockResolvedValue({});
 
-        const id = faker.string.uuid();
-        const userId = faker.string.uuid();
-        const data = {
-          name: faker.word.verb(),
-        };
+      const id = faker.string.uuid();
+      const userId = faker.string.uuid();
+      const data = {
+        name: faker.word.verb(),
+      };
 
-        const sut = updateListService.update(id, userId, data);
+      const sut = updateListService.update(id, userId, data);
 
-        await expect(sut).resolves.not.toThrow();
-        expect(listRepositoryMock.findOneOrFail).toHaveBeenCalledWith({
+      await expect(sut).resolves.not.toThrow();
+      expect(listRepositoryMock.findOneOrFail).toHaveBeenCalledWith({
+        id,
+        userId,
+      });
+      expect(listRepositoryMock.update).toHaveBeenCalledWith(
+        {
           id,
           userId,
-        });
-        expect(listRepositoryMock.update).toHaveBeenCalledWith(
-          {
-            id,
-            userId,
-          },
-          data,
-        );
-      });
+        },
+        data,
+      );
+    });
+  });
+  describe('WHEN matching List does not exists', () => {
+    test('SHOULD throws ResourceNotFoundException', async () => {
+      listRepositoryMock.findOneOrFail.mockRejectedValue({});
+
+      const sut = updateListService.update(
+        faker.string.uuid(),
+        faker.string.uuid(),
+        {
+          name: faker.word.noun(),
+        },
+      );
+      await expect(sut).rejects.toThrow(ResourceNotFoundException);
+    });
+  });
+  describe('WHEN some column is not allowed to change', () => {
+    test('SHOULD throws UpdateNotAllowedException', async () => {
+      listRepositoryMock.findOneOrFail.mockResolvedValue({});
+
+      const sut = updateListService.update(
+        faker.string.uuid(),
+        faker.string.uuid(),
+        {
+          id: faker.word.noun(),
+        },
+      );
+      await expect(sut).rejects.toThrow(UpdateNotAllowedException);
     });
   });
 });

@@ -1,4 +1,8 @@
-import { ResourceNotFoundException } from '@domain/exceptions';
+import {
+  ResourceNotFoundException,
+  UpdateNotAllowedException,
+} from '@domain/exceptions';
+import { ListModel } from '@domain/models';
 import { IListRepository, LIST_REPOSITORY } from '@domain/repositories';
 import { IUpdateList } from '@domain/use-cases';
 import { Inject, Injectable } from '@nestjs/common';
@@ -19,6 +23,19 @@ export class UpdateListService implements IUpdateList {
       tasks?: string | number | boolean;
     },
   ): Promise<void> {
+    const allowedColumnsToUpdate: (keyof ListModel)[] = ['name', 'description'];
+
+    const columnsToUpdate: (keyof ListModel)[] = Object.keys(
+      data,
+    ) as (keyof ListModel)[];
+    const notAllowedColumns = columnsToUpdate.filter(
+      (column) => !allowedColumnsToUpdate.includes(column),
+    );
+
+    if (notAllowedColumns.length > 0) {
+      throw new UpdateNotAllowedException('list', notAllowedColumns);
+    }
+
     await this.listRepository
       .findOneOrFail({
         id,

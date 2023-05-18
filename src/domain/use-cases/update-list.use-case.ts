@@ -7,3 +7,5 @@ export interface IUpdateList {
     data: { [K in keyof ListModel]?: string | number | boolean },
   ): Promise<void>;
 }
+
+export const UPDATE_LIST = 'UpdateList';

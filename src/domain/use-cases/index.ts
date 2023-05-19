@@ -5,3 +5,4 @@ export * from './read-list.use-case';
 export * from './remove-list.use-case';
 export * from './update-list.use-case';
 export * from './add-user.use-case';
+export * from './login.use-case';

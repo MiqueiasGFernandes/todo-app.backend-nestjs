@@ -37,7 +37,7 @@ export class UpdateListService implements IUpdateList {
     }
 
     await this.listRepository
-      .findOneOrFail({
+      .findOneByOrFail({
         id,
         userId,
       })

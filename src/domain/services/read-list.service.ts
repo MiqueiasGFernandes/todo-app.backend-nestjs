@@ -11,7 +11,7 @@ export class ReadListService implements IReadListUseCase {
   ) {}
   async get(id: string, userId: string): Promise<ListModel> {
     const list = await this.listRepository
-      .findOneOrFail({
+      .findOneByOrFail({
         id,
         userId,
       })

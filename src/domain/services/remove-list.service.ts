@@ -10,7 +10,7 @@ export class RemoveListService implements IRemoveListUseCase {
   ) {}
   async delete(id: string, userId: string): Promise<void> {
     await this.listRepository
-      .findOneOrFail({
+      .findOneByOrFail({
         id,
         userId,
       })

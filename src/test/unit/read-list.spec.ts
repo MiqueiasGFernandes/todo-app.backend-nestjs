@@ -17,7 +17,7 @@ describe('GIVEN reading List', () => {
         {
           provide: LIST_REPOSITORY,
           useFactory: (): MockType<IListRepository> => ({
-            findOneOrFail: jest.fn((data) => data),
+            findOneByOrFail: jest.fn((data) => data),
           }),
         },
       ],
@@ -34,7 +34,7 @@ describe('GIVEN reading List', () => {
       const id = faker.string.uuid();
       const userId = faker.string.uuid();
 
-      listRepositoryMock.findOneOrFail.mockResolvedValue({
+      listRepositoryMock.findOneByOrFail.mockResolvedValue({
         id,
         userId,
         description: faker.lorem.words(),
@@ -43,7 +43,7 @@ describe('GIVEN reading List', () => {
 
       const sut = await readListService.get(id, userId);
       expect(sut).toHaveProperty('id');
-      expect(listRepositoryMock.findOneOrFail).toHaveBeenCalledWith({
+      expect(listRepositoryMock.findOneByOrFail).toHaveBeenCalledWith({
         id,
         userId,
       });
@@ -54,7 +54,7 @@ describe('GIVEN reading List', () => {
       const id = faker.string.uuid();
       const userId = faker.string.uuid();
 
-      listRepositoryMock.findOneOrFail.mockRejectedValue({});
+      listRepositoryMock.findOneByOrFail.mockRejectedValue({});
 
       const sut = readListService.get(id, userId);
       await expect(sut).rejects.toThrow(ResourceNotFoundException);

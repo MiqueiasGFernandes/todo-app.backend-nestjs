@@ -16,7 +16,7 @@ describe('GIVEN removing List', () => {
         {
           provide: LIST_REPOSITORY,
           useFactory: (): MockType<IListRepository> => ({
-            findOneOrFail: jest.fn((data) => data),
+            findOneByOrFail: jest.fn((data) => data),
             delete: jest.fn((data) => data),
           }),
         },
@@ -34,7 +34,7 @@ describe('GIVEN removing List', () => {
       const id = faker.string.uuid();
       const userId = faker.string.uuid();
 
-      listRepositoryMock.findOneOrFail.mockResolvedValue({});
+      listRepositoryMock.findOneByOrFail.mockResolvedValue({});
       listRepositoryMock.delete.mockResolvedValue({});
 
       const sut = deleteListService.delete(id, userId);
@@ -47,7 +47,7 @@ describe('GIVEN removing List', () => {
       const id = faker.string.uuid();
       const userId = faker.string.uuid();
 
-      listRepositoryMock.findOneOrFail.mockRejectedValue({});
+      listRepositoryMock.findOneByOrFail.mockRejectedValue({});
 
       const sut = deleteListService.delete(id, userId);
       await expect(sut).rejects.toThrow(ResourceNotFoundException);

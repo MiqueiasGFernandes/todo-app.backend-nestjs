@@ -20,7 +20,7 @@ describe('GIVEN update List', () => {
           provide: LIST_REPOSITORY,
           useFactory: (): MockType<IListRepository> => ({
             update: jest.fn((data) => data),
-            findOneOrFail: jest.fn((data) => data),
+            findOneByOrFail: jest.fn((data) => data),
           }),
         },
       ],
@@ -35,7 +35,7 @@ describe('GIVEN update List', () => {
   describe('WHEN success', () => {
     test('SHOULD not thrown any error', async () => {
       listRepositoryMock.update.mockResolvedValue({});
-      listRepositoryMock.findOneOrFail.mockResolvedValue({});
+      listRepositoryMock.findOneByOrFail.mockResolvedValue({});
 
       const id = faker.string.uuid();
       const userId = faker.string.uuid();
@@ -46,7 +46,7 @@ describe('GIVEN update List', () => {
       const sut = updateListService.update(id, userId, data);
 
       await expect(sut).resolves.not.toThrow();
-      expect(listRepositoryMock.findOneOrFail).toHaveBeenCalledWith({
+      expect(listRepositoryMock.findOneByOrFail).toHaveBeenCalledWith({
         id,
         userId,
       });
@@ -61,7 +61,7 @@ describe('GIVEN update List', () => {
   });
   describe('WHEN matching List does not exists', () => {
     test('SHOULD throws ResourceNotFoundException', async () => {
-      listRepositoryMock.findOneOrFail.mockRejectedValue({});
+      listRepositoryMock.findOneByOrFail.mockRejectedValue({});
 
       const sut = updateListService.update(
         faker.string.uuid(),
@@ -75,7 +75,7 @@ describe('GIVEN update List', () => {
   });
   describe('WHEN some column is not allowed to change', () => {
     test('SHOULD throws UpdateNotAllowedException', async () => {
-      listRepositoryMock.findOneOrFail.mockResolvedValue({});
+      listRepositoryMock.findOneByOrFail.mockResolvedValue({});
 
       const sut = updateListService.update(
         faker.string.uuid(),

@@ -1,9 +1,10 @@
 import { ListModel } from './list.model';
 
 export class TaskModel {
-  id: string;
+  id?: string;
   name: string;
   description?: string;
-  done: boolean;
-  list: ListModel;
+  done?: boolean;
+  listId: string;
+  list?: ListModel;
 }
